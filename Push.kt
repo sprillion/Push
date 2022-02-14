@@ -1,7 +1,7 @@
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Push(private val userData: UserData) {
+class Push(private val userData: UserData): ISettable {
 
     private lateinit var currentTypePush: TypePush
     private lateinit var text: String
@@ -13,7 +13,7 @@ class Push(private val userData: UserData) {
     private var radius: Int = 0
     private var expiryDate: Long = 0
 
-    public fun Set(type: String, value: String)
+    override fun Set(type: String, value: String)
     {
         when (type)
         {

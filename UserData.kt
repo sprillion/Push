@@ -1,4 +1,4 @@
-class UserData {
+class UserData: ISettable {
     var time: Long = 0
         private set
     var age: Int = 0
@@ -12,7 +12,7 @@ class UserData {
     var yCoord: Float = 0f
         private set
 
-    public fun Set(type: String, value: String)
+    override fun Set(type: String, value: String)
     {
         when (type)
         {
