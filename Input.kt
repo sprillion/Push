@@ -2,28 +2,29 @@ class Input {
 
     private val countUserParam: Int = 6
 
-    public fun GetUserData(): UserData {
-        val userData: UserData = UserData()
+    fun getUserDataMap(): Map<String, String> {
+        val map = mutableMapOf<String, String>()
         for (element in 0 until countUserParam) {
             val line = readLine()!!.split(' ')
-            userData.Set(line!!.first(), line.last())
+            map[line.first()] = line.last()
         }
-        return userData
+        return map
     }
 
-    public fun GetCountPush(): Int
-    {
+    fun getCountPush(): Int {
         return readLine()!!.toInt()
     }
 
-    public fun GetPush(push: Push)
-    {
+    fun getPushMap() :Map<String, String> {
         val countArgument = readLine()!!.toInt()
+
+        val map = mutableMapOf<String, String>()
+
         for (i in 0 until countArgument)
         {
             val line = readLine()!!.split(' ')
-            push.Set(line!!.first(), line.last())
+            map[line.first()] = line.last()
         }
-
+        return map
     }
 }

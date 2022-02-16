@@ -1,73 +1,27 @@
-import kotlin.math.pow
-import kotlin.math.sqrt
+sealed class Push(val text: String) {
 
-class Push(private val userData: UserData): ISettable {
+    class LocationPush(text: String, val xCoord: Float, val yCoord: Float, val radius: Int, val expiryDate: Long): Push(text)
+    class AgeSpecificPush(text: String, val age: Int, val expiryDate: Long): Push(text)
+    class TechPush(text: String, val osVersion: Int): Push(text)
+    class LocationAgePush(text: String, val age: Int, val xCoord: Float, val yCoord: Float, val radius: Int): Push(text)
+    class GenderAgePush(text: String, val age: Int, val gender: Char): Push(text)
+    class GenderPush(text: String, val gender: Char): Push(text)
 
-    private lateinit var currentTypePush: TypePush
-    private lateinit var text: String
-    private var age: Int = 0
-    private var gender: Char = '\u0000'
-    private var osVersion: Int = 0
-    private var xCoord: Float = 0f
-    private var yCoord: Float = 0f
-    private var radius: Int = 0
-    private var expiryDate: Long = 0
-
-    override fun Set(type: String, value: String)
-    {
-        when (type)
+    companion object {
+        fun create(map: Map<String, String>): Push
         {
-            "type" -> currentTypePush = TypePush.valueOf(value)
-            "text" -> text = value
-            "age" -> age = value.toInt()
-            "gender" -> gender = value[0]
-            "os_version" -> osVersion = value.toInt()
-            "x_coord" -> xCoord = value.toFloat()
-            "y_coord" -> yCoord = value.toFloat()
-            "radius" -> radius = value.toInt()
-            "expiry_date" -> expiryDate = value.toLong()
+            val type = TypePush.valueOf(map.getValue("type"))
+            val text = map.getValue("text")
+
+            return when(type){
+                TypePush.LocationPush -> LocationPush(text, map.getValue("x_coord").toFloat(), map.getValue("y_coord").toFloat(), map.getValue("radius").toInt(), map.getValue("expiry_date").toLong())
+                TypePush.AgeSpecificPush -> AgeSpecificPush(text, map.getValue("age").toInt(), map.getValue("expiry_date").toLong())
+                TypePush.TechPush -> TechPush(text, map.getValue("os_version").toInt())
+                TypePush.LocationAgePush -> LocationAgePush(text, map.getValue("age").toInt(), map.getValue("x_coord").toFloat(), map.getValue("y_coord").toFloat(), map.getValue("radius").toInt())
+                TypePush.GenderAgePush-> GenderAgePush(text, map.getValue("age").toInt(), map.getValue("gender")[0])
+                TypePush.GenderPush -> GenderPush(text, map.getValue("gender")[0])
+            }
         }
-    }
-
-    public fun Filter(): Boolean
-    {
-        return when (currentTypePush) {
-            TypePush.LocationPush -> CheckPosition() && CheckTime()
-            TypePush.AgeSpecificPush -> CheckAge() && CheckTime()
-            TypePush.TechPush -> CheckOS()
-            TypePush.LocationAgePush -> CheckPosition() && CheckAge()
-            TypePush.GenderAgePush-> CheckGender() && CheckAge()
-            TypePush.GenderPush -> CheckGender()
-        }
-    }
-
-    public fun Show()
-    {
-        println(text)
-    }
-
-    private fun CheckPosition() :Boolean
-    {
-        val distance = sqrt ((xCoord - userData.xCoord).pow(2) + (yCoord - userData.yCoord).pow(2))
-        return distance <= radius
-    }
-    private fun CheckAge() :Boolean
-    {
-        return userData.age >= age
-    }
-    private fun CheckOS() :Boolean
-    {
-        return userData.osVersion <= osVersion
-    }
-
-    private fun CheckTime():Boolean
-    {
-        return userData.time <= expiryDate
-    }
-
-    private fun CheckGender():Boolean
-    {
-        return userData.gender == gender
     }
 
 }

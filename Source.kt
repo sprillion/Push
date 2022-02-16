@@ -1,15 +1,15 @@
 fun main(){
-    val input: Input = Input()
-    val output: Output = Output()
+    val input = Input()
+    val output= Output()
 
-    val userData = input.GetUserData()
-    val countPush = input.GetCountPush()
+    val userData = UserData.create(input.getUserDataMap())
+    val countPush = input.getCountPush()
 
-    for (i in 0 until countPush)
-    {
-        val push = Push(userData)
-        input.GetPush(push)
-        output.Add(push)
+    for (i in 0 until countPush){
+        val push = Push.create(input.getPushMap())
+
+        if (userData.filter(push))
+            output.add(push.text)
     }
-    output.Print()
+    output.print()
 }
